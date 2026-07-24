@@ -110,36 +110,6 @@
   .tag-blue { background: #e3f2fd; color: #1565c0; }
   .tag-gray { background: #f5f5f5; color: #616161; }
 
-  /* 本职工作三栏布局 */
-  .work-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
-    align-items: start;
-  }
-  .work-column {
-    min-width: 0;
-  }
-  .work-col-header {
-    font-size: 15px;
-    font-weight: 700;
-    padding: 10px 14px;
-    border-radius: 10px;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .work-col-header.col1 { background: #e8f5e9; color: #2e7d32; }
-  .work-col-header.col2 { background: #ffebee; color: #c62828; }
-  .work-col-header.col3 { background: #e3f2fd; color: #1565c0; }
-  .work-column .card { margin-bottom: 14px; }
-  .work-column .card:last-child { margin-bottom: 0; }
-
-  @media (max-width: 900px) {
-    .work-columns { grid-template-columns: 1fr; }
-  }
-
   /* 顶部统计卡片 */
   .stats-row {
     display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px;
@@ -314,7 +284,13 @@
       <span class="nav-icon">📊</span>内容复盘
     </div>
     <div class="nav-item" data-section="work" onclick="switchTab('work')">
-      <span class="nav-icon">💊</span>本职工作
+      <span class="nav-icon">📦</span>产品资料库
+    </div>
+    <div class="nav-item" data-section="chronic" onclick="switchTab('chronic')">
+      <span class="nav-icon">🔥</span>慢病行业热点
+    </div>
+    <div class="nav-item" data-section="rawmaterial" onclick="switchTab('rawmaterial')">
+      <span class="nav-icon">🧪</span>原料行业热点
     </div>
     <div class="nav-item" data-section="memo" onclick="switchTab('memo')">
       <span class="nav-icon">📝</span>备忘录
@@ -650,14 +626,8 @@
       </div>
     </section>
 
-    <!-- 本职工作 · 贝塔莱福 · 中老年慢病方向 -->
+    <!-- 产品资料库 -->
     <section class="section" id="work">
-
-     <div class="work-columns">
-
-      <!-- ===== 左栏：贝塔莱福产品资料库 ===== -->
-      <div class="work-column">
-        <div class="work-col-header col1">📦 贝塔莱福产品资料库</div>
 
       <!-- 产品资料库 -->
       <div class="card" style="border-left:4px solid #34c759;">
@@ -1769,13 +1739,12 @@
         </div>
       </div>
 
-      </div><!-- /左栏 -->
+    </section>
 
-      <!-- ===== 中栏：中老年慢病行业热点 ===== -->
-      <div class="work-column">
-        <div class="work-col-header col2">🔥 中老年慢病行业热点</div>
+    <!-- 中老年慢病行业热点 -->
+    <section class="section" id="chronic">
 
-      <div class="stats-row" style="grid-template-columns: repeat(2, 1fr); margin-bottom:14px;">
+      <div class="stats-row">
         <div class="stat-card"><div class="num">2.8亿</div><div class="label">中老年人口</div></div>
         <div class="stat-card"><div class="num">3860亿</div><div class="label">中老年保健品市场</div></div>
         <div class="stat-card"><div class="num">+12.7%</div><div class="label">年增长率</div></div>
@@ -2088,11 +2057,10 @@
         </div>
       </div>
 
-      </div><!-- /中栏 -->
+    </section>
 
-      <!-- ===== 右栏：保健食品原料行业热点 ===== -->
-      <div class="work-column">
-        <div class="work-col-header col3">🧪 保健食品原料行业热点</div>
+    <!-- 保健食品原料行业热点 -->
+    <section class="section" id="rawmaterial">
 
         <!-- 原料行业趋势 -->
         <div class="card">
@@ -2278,10 +2246,6 @@
           💡 <b>原料行业每日关注建议：</b>①关注卫健委新食品原料公告 ②关注日本功能表示食品申报动态 ③关注FoodNavigator/营养盒子等行业媒体 ④关注竞品品牌新品上市原料组合 ⑤关注小红书/抖音原料热搜词变化
         </div>
 
-      </div><!-- /右栏 -->
-
-     </div><!-- /work-columns -->
-
     </section>
 
     <!-- 备忘录 -->
@@ -2335,7 +2299,9 @@
     ideas: '选题每日灵感',
     hot: '爆款热点/二创',
     review: '内容复盘',
-    work: '本职工作 · 贝塔莱福',
+    work: '贝塔莱福产品资料库',
+    chronic: '中老年慢病行业热点',
+    rawmaterial: '保健食品原料行业热点',
     memo: '备忘录'
   };
 
