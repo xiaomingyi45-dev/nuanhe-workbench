@@ -110,6 +110,36 @@
   .tag-blue { background: #e3f2fd; color: #1565c0; }
   .tag-gray { background: #f5f5f5; color: #616161; }
 
+  /* 本职工作三栏布局 */
+  .work-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+  .work-column {
+    min-width: 0;
+  }
+  .work-col-header {
+    font-size: 15px;
+    font-weight: 700;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .work-col-header.col1 { background: #e8f5e9; color: #2e7d32; }
+  .work-col-header.col2 { background: #ffebee; color: #c62828; }
+  .work-col-header.col3 { background: #e3f2fd; color: #1565c0; }
+  .work-column .card { margin-bottom: 14px; }
+  .work-column .card:last-child { margin-bottom: 0; }
+
+  @media (max-width: 900px) {
+    .work-columns { grid-template-columns: 1fr; }
+  }
+
   /* 顶部统计卡片 */
   .stats-row {
     display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px;
@@ -622,6 +652,12 @@
 
     <!-- 本职工作 · 贝塔莱福 · 中老年慢病方向 -->
     <section class="section" id="work">
+
+     <div class="work-columns">
+
+      <!-- ===== 左栏：贝塔莱福产品资料库 ===== -->
+      <div class="work-column">
+        <div class="work-col-header col1">📦 贝塔莱福产品资料库</div>
 
       <!-- 产品资料库 -->
       <div class="card" style="border-left:4px solid #34c759;">
@@ -1733,7 +1769,13 @@
         </div>
       </div>
 
-      <div class="stats-row">
+      </div><!-- /左栏 -->
+
+      <!-- ===== 中栏：中老年慢病行业热点 ===== -->
+      <div class="work-column">
+        <div class="work-col-header col2">🔥 中老年慢病行业热点</div>
+
+      <div class="stats-row" style="grid-template-columns: repeat(2, 1fr); margin-bottom:14px;">
         <div class="stat-card"><div class="num">2.8亿</div><div class="label">中老年人口</div></div>
         <div class="stat-card"><div class="num">3860亿</div><div class="label">中老年保健品市场</div></div>
         <div class="stat-card"><div class="num">+12.7%</div><div class="label">年增长率</div></div>
@@ -2045,6 +2087,200 @@
           ⭐ <b>贝塔莱福核心卖点回顾：</b>日本原装进口功能性原料 · 总部东京 · 天津滨海新区 · 胶原蛋白/弹性蛋白/纳豆激酶/辅酶Q10等 · 日本OEM代工一站式服务
         </div>
       </div>
+
+      </div><!-- /中栏 -->
+
+      <!-- ===== 右栏：保健食品原料行业热点 ===== -->
+      <div class="work-column">
+        <div class="work-col-header col3">🧪 保健食品原料行业热点</div>
+
+        <!-- 原料行业趋势 -->
+        <div class="card">
+          <div class="card-title">
+            📊 原料行业趋势
+            <span class="card-tag tag-blue">前沿动态</span>
+          </div>
+          <div class="card-desc">保健食品原料政策 · 市场动态 · 技术趋势</div>
+
+          <div class="hot-item">
+            <div class="hot-rank top">1</div>
+            <div class="hot-content">
+              <div class="hot-title">新食品原料审批加速，植物来源成主流</div>
+              <div class="hot-meta">📌 2024年卫健委新批多种植物原料 · 茶树花、枇杷花等获批 · 功能性食品扩容</div>
+            </div>
+            <div class="hot-arrow">›</div>
+          </div>
+          <div class="hot-item">
+            <div class="hot-rank top">2</div>
+            <div class="hot-content">
+              <div class="hot-title">后生元（灭活益生菌）成行业新风口</div>
+              <div class="hot-meta">📌 杀菌型益生菌耐高温/可常温/可与抗生素同服 · 供应链门槛大幅降低 · 2025年市场爆发</div>
+            </div>
+            <div class="hot-arrow">›</div>
+          </div>
+          <div class="hot-item">
+            <div class="hot-rank hot">3</div>
+            <div class="hot-content">
+              <div class="hot-title">Sirtuin长寿基因激活剂成抗衰热点</div>
+              <div class="hot-meta">📌 白皮杉醇/白藜芦醇/NMN同赛道 · 基因层面抗衰 · Science/Nature顶刊背书</div>
+            </div>
+            <div class="hot-arrow">›</div>
+          </div>
+          <div class="hot-item">
+            <div class="hot-rank">4</div>
+            <div class="hot-content">
+              <div class="hot-title">肽类原料分子量竞争白热化</div>
+              <div class="hot-meta">📌 胶原三肽280Da vs 普通胶原肽1000-3000Da · "小分子"成核心卖点 · 吸收率成竞争壁垒</div>
+            </div>
+            <div class="hot-arrow">›</div>
+          </div>
+          <div class="hot-item">
+            <div class="hot-rank">5</div>
+            <div class="hot-content">
+              <div class="hot-title">日本功能表示食品制度经验被中国借鉴</div>
+              <div class="hot-meta">📌 日本功能表示食品超3500件 · 中国保健食品备案制改革 · 功能声称放开趋势</div>
+            </div>
+            <div class="hot-arrow">›</div>
+          </div>
+        </div>
+
+        <!-- 热门原料赛道 -->
+        <div class="card">
+          <div class="card-title">
+            🔬 热门原料赛道速览
+            <span class="card-tag tag-green">选品参考</span>
+          </div>
+          <div class="card-desc">各赛道增长快、竞争格局、贝塔莱福对应产品</div>
+
+          <div class="idea-card hot">
+            <div class="idea-header">
+              <div class="idea-title">🔥 赛道① 溶栓/心血管</div>
+              <span class="card-tag tag-red">百亿市场</span>
+            </div>
+            <div class="idea-body" style="font-size:13px;">
+              <b>市场规模：</b>心脑血管保健品超500亿 · 纳豆激酶年增速30%+<br>
+              <b>竞争格局：</b>日生研NSKSD vs 国产纳豆激酶 · 活性单位(FU)是核心壁垒<br>
+              <b>BLB产品：</b>纳豆激酶（20,000FU/g，脱嘌呤脱VK2）+ 鲣鱼弹性蛋白肽 + 米糠脂肪烷醇
+            </div>
+          </div>
+
+          <div class="idea-card hot">
+            <div class="idea-header">
+              <div class="idea-title">🔥 赛道② 口服美容</div>
+              <span class="card-tag tag-red">千亿市场</span>
+            </div>
+            <div class="idea-body" style="font-size:13px;">
+              <b>市场规模：</b>口服美容超1000亿 · 胶原蛋白肽占60%+<br>
+              <b>竞争格局：</b>分子量内卷（3000Da→1000Da→280Da）· 鱼源>牛源/猪源<br>
+              <b>BLB产品：</b>胶原三肽CTP(280Da) + 鱼胶原NT-B + 红鲷鱼胶原 + 鲣鱼弹性蛋白 + 鲑鱼鼻软骨蛋白多糖
+            </div>
+          </div>
+
+          <div class="idea-card hot">
+            <div class="idea-header">
+              <div class="idea-title">🔥 赛道③ 减脂控重</div>
+              <span class="card-tag tag-yellow">高增长</span>
+            </div>
+            <div class="idea-body" style="font-size:13px;">
+              <b>市场规模：</b>体重管理超800亿 · 全球10亿肥胖人口<br>
+              <b>竞争格局：</b>白芸豆提取物(阻断碳水) vs 奥利司他(阻断脂肪) → 天然原料替代趋势<br>
+              <b>BLB产品：</b>茶树花浓缩粉 + 栗子粉(淀粉酶抑制IC50=18.2) + 米粕发酵粉(抗性蛋白) + 山葵浓缩粉(燃脂)
+            </div>
+          </div>
+
+          <div class="idea-card hot">
+            <div class="idea-header">
+              <div class="idea-title">🔥 赛道④ 骨关节</div>
+              <span class="card-tag tag-blue">刚需大</span>
+            </div>
+            <div class="idea-body" style="font-size:13px;">
+              <b>市场规模：</b>骨关节保健品超300亿 · 氨糖占主导但增长放缓<br>
+              <b>竞争格局：</b>非变性II型胶原成新方向（vs 变性II型胶原）· 蛋白多糖全球稀缺<br>
+              <b>BLB产品：</b>鲑鱼鼻软骨PCT-II(非变性II型胶原+蛋白多糖) + 鱼胶原NT-B(骨再生) + 大豆多胺(软骨再生) + 植物硅素(成骨)
+            </div>
+          </div>
+
+          <div class="idea-card hot">
+            <div class="idea-header">
+              <div class="idea-title">🔥 赛道⑤ 抗衰/基因层面</div>
+              <span class="card-tag tag-purple">前沿</span>
+            </div>
+            <div class="idea-body" style="font-size:13px;">
+              <b>市场规模：</b>抗衰老市场超2000亿 · 2030年中国超级老龄化<br>
+              <b>竞争格局：</b>NMN受限 → Sirtuin激活剂(白皮杉醇)成替代 · 麦角硫因成新宠<br>
+              <b>BLB产品：</b>百香果白皮杉醇Passienol®(金奖) + 金顶侧耳麦角硫因 + 鲑鱼精巢DNA + 大豆多胺(亚精胺)
+            </div>
+          </div>
+
+          <div class="idea-card hot">
+            <div class="idea-header">
+              <div class="idea-title">🔥 赛道⑥ 护肝解酒</div>
+              <span class="card-tag tag-yellow">大体量</span>
+            </div>
+            <div class="idea-body" style="font-size:13px;">
+              <b>市场规模：</b>护肝解酒约700亿 · 4.47亿慢性肝病 · 5亿酒民<br>
+              <b>竞争格局：</b>水飞蓟(奶蓟草)为主流 → 普利醇(米糠脂肪烷醇)成差异化新选<br>
+              <b>BLB产品：</b>米糠脂肪烷醇(40mg/日极效) + 谷胱甘肽 + 西蓝花浓缩粉(萝卜硫素排毒)
+            </div>
+          </div>
+        </div>
+
+        <!-- 政策法规速查 -->
+        <div class="card">
+          <div class="card-title">
+            📋 政策法规速查
+            <span class="card-tag tag-purple">合规先行</span>
+          </div>
+          <div class="card-desc">原料合规身份决定产品能不能做 · 跟客户聊必谈</div>
+
+          <div class="idea-card">
+            <div class="idea-header">
+              <div class="idea-title">📌 蓝帽子（保健食品注册）</div>
+            </div>
+            <div class="idea-body" style="font-size:13px;">
+              注册制（27种功能声称）· 周期2-3年 · 费用30-80万 · 适合大单品<br>
+              <b>BLB相关：</b>纳豆激酶、辅酶Q10、鱼油均有蓝帽子备案产品可参考
+            </div>
+          </div>
+
+          <div class="idea-card">
+            <div class="idea-header">
+              <div class="idea-title">📌 备案制（保健食品备案）</div>
+            </div>
+            <div class="idea-body" style="font-size:13px;">
+              备案制（原料目录内）· 周期3-6个月 · 费用低 · 营养素补充剂为主<br>
+              <b>趋势：</b>备案原料目录持续扩容，功能性原料有望纳入
+            </div>
+          </div>
+
+          <div class="idea-card">
+            <div class="idea-header">
+              <div class="idea-title">📌 新食品原料</div>
+            </div>
+            <div class="idea-body" style="font-size:13px;">
+              卫健委审批 · 可做普通食品 · 无功能声称限制但需标注不适宜人群<br>
+              <b>BLB相关：</b>茶树花（已获批新食品原料）· 米糠脂肪烷醇（2017年第7号公告）
+            </div>
+          </div>
+
+          <div class="idea-card">
+            <div class="idea-header">
+              <div class="idea-title">📌 普通食品原料</div>
+            </div>
+            <div class="idea-body" style="font-size:13px;">
+              有传统食用历史 · 可直接用于普通食品 · 门槛最低<br>
+              <b>BLB相关：</b>纳豆、可可豆、西蓝花、栗子、山葵、菱角等均为普通食品原料
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#e3f2fd; padding:12px; border-radius:10px; margin-top:8px; font-size:12px; color:#1565c0; line-height:1.7;">
+          💡 <b>原料行业每日关注建议：</b>①关注卫健委新食品原料公告 ②关注日本功能表示食品申报动态 ③关注FoodNavigator/营养盒子等行业媒体 ④关注竞品品牌新品上市原料组合 ⑤关注小红书/抖音原料热搜词变化
+        </div>
+
+      </div><!-- /右栏 -->
+
+     </div><!-- /work-columns -->
 
     </section>
 
