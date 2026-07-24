@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>暖禾不胖 · 创作工作台</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f5f5f7;
+    color: #1d1d1f;
+    display: flex;
+  }
+
+  /* 左侧导航 */
+  .sidebar {
+    width: 240px;
+    background: #fff;
+    border-right: 1px solid #e5e5e7;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    z-index: 10;
+  }
+  .sidebar-header {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid #f0f0f2;
+  }
+  .brand { font-size: 18px; font-weight: 700; color: #1d1d1f; }
+  .brand-sub { font-size: 12px; color: #86868b; margin-top: 4px; }
+  .nav-list { padding: 12px 10px; flex: 1; overflow-y: auto; }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 14px; margin-bottom: 4px;
+    border-radius: 10px; cursor: pointer;
+    transition: all 0.2s;
+    color: #555;
+    font-size: 14px; font-weight: 500;
+  }
+  .nav-item:hover { background: #f5f5f7; }
+  .nav-item.active {
+    background: #34c759; color: #fff;
+    box-shadow: 0 4px 12px rgba(52, 199, 89, 0.25);
+  }
+  .nav-icon { width: 22px; text-align: center; font-size: 18px; }
+
+  /* 主内容区 */
+  .main {
+    flex: 1; display: flex; flex-direction: column;
+    min-width: 0;
+  }
+  .topbar {
+    height: 64px; background: #fff;
+    border-bottom: 1px solid #e5e5e7;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px; flex-shrink: 0;
+  }
+  .page-title { font-size: 20px; font-weight: 700; color: #1d1d1f; }
+  .topbar-right { display: flex; align-items: center; gap: 16px; }
+  .search-box {
+    position: relative; width: 260px;
+  }
+  .search-box input {
+    width: 100%; padding: 9px 14px 9px 36px;
+    border: 1px solid #e5e5e7; border-radius: 20px;
+    font-size: 13px; background: #f5f5f7;
+    outline: none; transition: all 0.2s;
+  }
+  .search-box input:focus { background: #fff; border-color: #34c759; }
+  .search-box::before {
+    content: "🔍"; position: absolute; left: 12px; top: 50%;
+    transform: translateY(-50%); font-size: 13px; opacity: 0.5;
+  }
+  .date-badge {
+    font-size: 13px; color: #86868b; font-weight: 500;
+    background: #f5f5f7; padding: 8px 14px; border-radius: 18px;
+  }
+  .menu-btn { display: none; font-size: 22px; cursor: pointer; }
+
+  /* 内容滚动区 */
+  .content {
+    flex: 1; overflow-y: auto; padding: 24px 28px;
+  }
+  .section { display: none; animation: fadeIn 0.25s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* 卡片基础 */
+  .card {
+    background: #fff; border-radius: 16px;
+    padding: 20px; margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border: 1px solid #f0f0f2;
+  }
+  .card-title {
+    font-size: 16px; font-weight: 700; color: #1d1d1f; margin-bottom: 6px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-desc { font-size: 13px; color: #86868b; margin-bottom: 16px; line-height: 1.5; }
+  .card-tag {
+    display: inline-block; padding: 3px 10px; border-radius: 12px;
+    font-size: 11px; font-weight: 600; margin-left: 8px;
+  }
+  .tag-green { background: #e8f5e9; color: #2e7d32; }
+  .tag-yellow { background: #fff8e1; color: #f9a825; }
+  .tag-red { background: #ffebee; color: #c62828; }
+  .tag-purple { background: #f3e5f5; color: #7b1fa2; }
+  .tag-blue { background: #e3f2fd; color: #1565c0; }
+  .tag-gray { background: #f5f5f5; color: #616161; }
+
+  /* 顶部统计卡片 */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px;
+  }
+  .stat-card {
+    background: #fff; border-radius: 16px; padding: 18px 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04); border: 1px solid #f0f0f2;
+  }
+  .stat-card .num { font-size: 26px; font-weight: 700; color: #1d1d1f; margin-bottom: 4px; }
+  .stat-card .label { font-size: 12px; color: #86868b; }
+  .stat-card .trend { font-size: 11px; color: #34c759; margin-top: 4px; font-weight: 600; }
+
+  /* 任务卡片 */
+  .task-card {
+    background: #fff; border-radius: 14px; padding: 16px 18px;
+    margin-bottom: 12px; border: 1px solid #f0f0f2;
+    display: flex; align-items: flex-start; gap: 14px;
+    transition: all 0.2s; cursor: pointer;
+  }
+  .task-card:hover { border-color: #34c759; box-shadow: 0 2px 8px rgba(52,199,89,0.08); }
+  .task-card.done { opacity: 0.6; background: #f9f9fb; }
+  .task-card.done .task-title { text-decoration: line-through; color: #999; }
+  .task-checkbox {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid #d1d1d6; flex-shrink: 0; margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; cursor: pointer;
+  }
+  .task-checkbox.checked {
+    background: #34c759; border-color: #34c759;
+    color: #fff; font-size: 13px;
+  }
+  .task-content { flex: 1; }
+  .task-title { font-size: 15px; font-weight: 600; color: #1d1d1f; margin-bottom: 4px; }
+  .task-desc { font-size: 12px; color: #86868b; line-height: 1.5; }
+  .task-meta { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .task-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .btn-small {
+    padding: 5px 12px; border-radius: 14px; font-size: 11px;
+    border: 1px solid #e5e5e7; background: #fff; color: #555;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-small:hover { border-color: #34c759; color: #34c759; }
+  .btn-small.primary { background: #34c759; color: #fff; border-color: #34c759; }
+
+  /* 灵感卡片 */
+  .idea-card {
+    background: #fff; border-radius: 14px; padding: 18px;
+    margin-bottom: 14px; border: 1px solid #f0f0f2;
+    border-left: 4px solid #34c759;
+  }
+  .idea-card.hot { border-left-color: #ff3b30; }
+  .idea-card.trend { border-left-color: #ff9500; }
+  .idea-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .idea-title { font-size: 16px; font-weight: 700; color: #1d1d1f; flex: 1; line-height: 1.4; }
+  .idea-body { font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 12px; }
+  .idea-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .idea-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 18px; font-size: 12px; font-weight: 600;
+    border: 1px solid #e5e5e7; background: #fff; color: #555; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .idea-btn:hover { background: #f5f5f7; }
+  .idea-btn.green { background: #34c759; color: #fff; border-color: #34c759; }
+
+  /* 热点列表 */
+  .hot-item {
+    background: #fff; border-radius: 14px; padding: 16px 18px;
+    margin-bottom: 12px; border: 1px solid #f0f0f2;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .hot-rank {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; flex-shrink: 0;
+    background: #f5f5f7; color: #555;
+  }
+  .hot-rank.top { background: #ff3b30; color: #fff; }
+  .hot-rank.hot { background: #ff9500; color: #fff; }
+  .hot-content { flex: 1; }
+  .hot-title { font-size: 15px; font-weight: 600; color: #1d1d1f; margin-bottom: 4px; }
+  .hot-meta { font-size: 12px; color: #86868b; display: flex; gap: 12px; }
+  .hot-arrow { font-size: 18px; color: #c7c7cc; }
+
+  /* 数据复盘 */
+  .chart-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .data-box {
+    background: #fff; border-radius: 14px; padding: 18px;
+    border: 1px solid #f0f0f2;
+  }
+  .data-box .d-title { font-size: 13px; color: #86868b; margin-bottom: 8px; }
+  .data-box .d-num { font-size: 28px; font-weight: 700; color: #1d1d1f; }
+  .data-box .d-sub { font-size: 12px; color: #34c759; margin-top: 4px; }
+  .post-list { margin-top: 16px; }
+  .post-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 14px; background: #f9f9fb; border-radius: 10px;
+    margin-bottom: 8px; font-size: 13px;
+  }
+  .post-item.top { background: #e8f5e9; }
+  .post-item .p-title { color: #1d1d1f; font-weight: 500; }
+  .post-item .p-num { color: #34c759; font-weight: 700; }
+
+  /* 备忘录 */
+  .memo-input {
+    width: 100%; padding: 14px; border: 1px solid #e5e5e7;
+    border-radius: 14px; font-size: 14px; font-family: inherit;
+    resize: vertical; min-height: 80px; outline: none; margin-bottom: 12px;
+  }
+  .memo-input:focus { border-color: #34c759; }
+  .memo-card {
+    background: #fff; border-radius: 12px; padding: 14px;
+    margin-bottom: 10px; border: 1px solid #f0f0f2;
+    border-left: 4px solid #ffcc00;
+  }
+  .memo-text { font-size: 14px; color: #1d1d1f; line-height: 1.6; }
+  .memo-time { font-size: 11px; color: #86868b; margin-top: 6px; }
+
+  /* 添加按钮 */
+  .add-float {
+    position: fixed; right: 28px; bottom: 28px;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: #34c759; color: #fff; font-size: 28px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(52,199,89,0.35);
+    cursor: pointer; border: none; z-index: 100;
+  }
+  .add-float:hover { transform: scale(1.05); }
+
+  /* 进度条 */
+  .progress-wrap { margin-top: 16px; }
+  .progress-info { display: flex; justify-content: space-between; font-size: 12px; color: #86868b; margin-bottom: 6px; }
+  .progress-bar { height: 8px; background: #f0f0f2; border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; background: #34c759; border-radius: 4px; transition: width 0.3s; }
+
+  /* 响应式 */
+  @media (max-width: 768px) {
+    .sidebar { position: fixed; left: -240px; top: 0; bottom: 0; transition: left 0.3s; }
+    .sidebar.open { left: 0; }
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 5; }
+    .overlay.show { display: block; }
+    .menu-btn { display: block; }
+    .topbar { padding: 0 16px; }
+    .content { padding: 16px; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .search-box { width: 160px; }
+    .chart-row { grid-template-columns: 1fr; }
+    .add-float { right: 16px; bottom: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 左侧导航 -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="brand">🍲 暖禾不胖</div>
+    <div class="brand-sub">创作工作台</div>
+  </div>
+  <nav class="nav-list">
+    <div class="nav-item active" data-section="plan" onclick="switchTab('plan')">
+      <span class="nav-icon">📋</span>每日计划
+    </div>
+    <div class="nav-item" data-section="ideas" onclick="switchTab('ideas')">
+      <span class="nav-icon">💡</span>选题每日灵感
+    </div>
+    <div class="nav-item" data-section="hot" onclick="switchTab('hot')">
+      <span class="nav-icon">🔥</span>爆款热点/二创
+    </div>
+    <div class="nav-item" data-section="review" onclick="switchTab('review')">
+      <span class="nav-icon">📊</span>内容复盘
+    </div>
+    <div class="nav-item" data-section="work" onclick="switchTab('work')">
+      <span class="nav-icon">💊</span>本职工作
+    </div>
+    <div class="nav-item" data-section="memo" onclick="switchTab('memo')">
+      <span class="nav-icon">📝</span>备忘录
+    </div>
+  </nav>
+</aside>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- 主内容区 -->
+<main class="main">
+  <header class="topbar">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span class="menu-btn" onclick="openSidebar()">☰</span>
+      <h1 class="page-title" id="pageTitle">每日计划</h1>
+    </div>
+    <div class="topbar-right">
+      <div class="search-box"><input type="text" placeholder="搜索任务、灵感、热点..." id="searchInput" oninput="doSearch()"></div>
+      <div class="date-badge" id="dateBadge">--</div>
+    </div>
+  </header>
+
+  <div class="content" id="content">
+
+    <!-- 每日计划 -->
+    <section class="section active" id="plan">
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="num" id="statTotal">6</div><div class="label">今日任务</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" id="statDone">0</div><div class="label">已完成</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" id="statLeft">6</div><div class="label">待完成</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" id="statRate">0%</div><div class="label">完成率</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📋 今日运营任务</div>
+        <div class="card-desc">完成一项点一下圆圈，像完成 APP 任务一样有成就感</div>
+
+        <div class="task-card" data-task="0">
+          <div class="task-checkbox" onclick="toggleTask(0)"></div>
+          <div class="task-content">
+            <div class="task-title">浏览小红书热门话题 30 分钟</div>
+            <div class="task-desc">找 3 个可蹭热点，记录到「爆款热点/二创」板块</div>
+            <div class="task-meta"><span class="card-tag tag-green">日常</span><span class="card-tag tag-gray">09:00</span></div>
+          </div>
+        </div>
+
+        <div class="task-card" data-task="1">
+          <div class="task-checkbox" onclick="toggleTask(1)"></div>
+          <div class="task-content">
+            <div class="task-title">拆解昨日爆款笔记的选题思路</div>
+            <div class="task-desc">看同赛道 TOP10 笔记，记录到「选题每日灵感」</div>
+            <div class="task-meta"><span class="card-tag tag-purple">提升</span></div>
+          </div>
+        </div>
+
+        <div class="task-card" data-task="2">
+          <div class="task-checkbox" onclick="toggleTask(2)"></div>
+          <div class="task-content">
+            <div class="task-title">拍摄 2 条原创素材</div>
+            <div class="task-desc">用「叮！」公式拍节气食单 / 懒人减脂餐</div>
+            <div class="task-meta"><span class="card-tag tag-yellow">创作</span></div>
+          </div>
+        </div>
+
+        <div class="task-card" data-task="3">
+          <div class="task-checkbox" onclick="toggleTask(3)"></div>
+          <div class="task-content">
+            <div class="task-title">撰写笔记文案 + 配图</div>
+            <div class="task-desc">标题套用爆款公式，封面结果前置</div>
+            <div class="task-meta"><span class="card-tag tag-yellow">创作</span></div>
+          </div>
+        </div>
+
+        <div class="task-card" data-task="4">
+          <div class="task-checkbox" onclick="toggleTask(4)"></div>
+          <div class="task-content">
+            <div class="task-title">发布 1 篇笔记 + 回复评论</div>
+            <div class="task-desc">晚高峰 19:30 发布，1 小时内回复评论</div>
+            <div class="task-meta"><span class="card-tag tag-red">19:30</span></div>
+          </div>
+        </div>
+
+        <div class="task-card" data-task="5">
+          <div class="task-checkbox" onclick="toggleTask(5)"></div>
+          <div class="task-content">
+            <div class="task-title">复盘当日数据</div>
+            <div class="task-desc">记录点赞/收藏/评论数，对比昨日变化</div>
+            <div class="task-meta"><span class="card-tag tag-green">日常</span><span class="card-tag tag-gray">22:00</span></div>
+          </div>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-info"><span>今日进度</span><span id="progressText">0 / 6</span></div>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 选题每日灵感 -->
+    <section class="section" id="ideas">
+      <div class="card">
+        <div class="card-title">
+          💡 每日选题灵感
+          <span class="card-tag tag-green">每天 09:00 自动更新</span>
+        </div>
+        <div class="card-desc">每条灵感都附「看相关视频」按钮，去小红书/B站搜同款找灵感</div>
+
+        <div class="idea-card hot">
+          <div class="idea-header">
+            <div class="idea-title">1. 把「三伏天祛湿」拍成具体食材清单</div>
+            <span class="card-tag tag-red">爆款</span>
+          </div>
+          <div class="idea-body">
+            祛湿是全民养生刚需，你已有「入伏吃什么」374赞基础。把抽象节气拍成"3种食材+1个做法"，直接可照抄，收藏率极高。
+          </div>
+          <div class="idea-actions">
+            <button class="idea-btn green" onclick="openSearch('三伏天祛湿食谱')">▶ 小红书搜相关</button>
+            <button class="idea-btn" onclick="openSearch('三伏天祛湿 B站')">▶ B站相关</button>
+          </div>
+        </div>
+
+        <div class="idea-card trend">
+          <div class="idea-header">
+            <div class="idea-title">2. 立秋「润肺」低卡食谱合集</div>
+            <span class="card-tag tag-yellow">时令</span>
+          </div>
+          <div class="idea-body">
+            8月7日立秋，提前3-5天布局。顺时而食+低卡减脂双标签，抢占养生和减脂两个流量池。
+          </div>
+          <div class="idea-actions">
+            <button class="idea-btn green" onclick="openSearch('立秋润肺食谱 小红书')">▶ 小红书搜相关</button>
+            <button class="idea-btn" onclick="openSearch('立秋养生 B站')">▶ B站相关</button>
+          </div>
+        </div>
+
+        <div class="idea-card">
+          <div class="idea-header">
+            <div class="idea-title">3. 打工带饭·一周减脂便当日历</div>
+            <span class="card-tag tag-blue">系列</span>
+          </div>
+          <div class="idea-body">
+            周一到周五每天1张图，做成系列化内容。"跟着吃一周"的承诺感，比单篇食谱更容易涨粉。
+          </div>
+          <div class="idea-actions">
+            <button class="idea-btn green" onclick="openSearch('减脂便当 小红书')">▶ 小红书搜相关</button>
+            <button class="idea-btn" onclick="openSearch('减脂便当 B站')">▶ B站相关</button>
+          </div>
+        </div>
+
+        <div class="idea-card">
+          <div class="idea-header">
+            <div class="idea-title">4. 把"微波炉早餐"做成系列化</div>
+            <span class="card-tag tag-green">已验证</span>
+          </div>
+          <div class="idea-body">
+            你这篇448赞。继续延伸：微波炉减脂晚餐、微波炉办公室午餐、微波炉宿舍餐。统一封面模板，强化记忆点。
+          </div>
+          <div class="idea-actions">
+            <button class="idea-btn green" onclick="openSearch('微波炉减脂餐 小红书')">▶ 小红书搜相关</button>
+            <button class="idea-btn" onclick="openSearch('微波炉早餐 B站')">▶ B站相关</button>
+          </div>
+        </div>
+
+        <div class="idea-card">
+          <div class="idea-header">
+            <div class="idea-title">5. 低糖抗炎 + 中式节气结合</div>
+            <span class="card-tag tag-purple">新趋势</span>
+          </div>
+          <div class="idea-body">
+            低糖抗炎是2025热点，但多为西式。你用中式食材（银耳、百合、山药）做抗炎版本，差异化明显。
+          </div>
+          <div class="idea-actions">
+            <button class="idea-btn green" onclick="openSearch('抗炎食谱 中式')">▶ 小红书搜相关</button>
+            <button class="idea-btn" onclick="openSearch('低糖抗炎 B站')">▶ B站相关</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 爆款热点/二创 -->
+    <section class="section" id="hot">
+      <div class="card">
+        <div class="card-title">🔥 爆款热点追踪</div>
+        <div class="card-desc">同赛道热门话题 + 可二创的爆款方向</div>
+
+        <div class="hot-item">
+          <div class="hot-rank top">1</div>
+          <div class="hot-content">
+            <div class="hot-title">三伏天祛湿食谱</div>
+            <div class="hot-meta">🔥 9.5w · 祛湿 · 红豆薏米 · 冬瓜 · 持续上升</div>
+          </div>
+          <div class="hot-arrow">›</div>
+        </div>
+
+        <div class="hot-item">
+          <div class="hot-rank top">2</div>
+          <div class="hot-content">
+            <div class="hot-title">低糖抗炎饮食</div>
+            <div class="hot-meta">🔥 7.2w · 抗炎 · 低GI · 控糖 · 40+女性高频</div>
+          </div>
+          <div class="hot-arrow">›</div>
+        </div>
+
+        <div class="hot-item">
+          <div class="hot-rank hot">3</div>
+          <div class="hot-content">
+            <div class="hot-title">立秋贴秋膘低卡版</div>
+            <div class="hot-meta">🔥 5.8w · 立秋 · 润肺 · 银耳百合 · 即将爆发</div>
+          </div>
+          <div class="hot-arrow">›</div>
+        </div>
+
+        <div class="hot-item">
+          <div class="hot-rank">4</div>
+          <div class="hot-content">
+            <div class="hot-title">微波炉/空气炸锅减脂餐</div>
+            <div class="hot-meta">🔥 4.3w · 不开火 · 懒人 · 3分钟 · 你已验证</div>
+          </div>
+          <div class="hot-arrow">›</div>
+        </div>
+
+        <div class="hot-item">
+          <div class="hot-rank">5</div>
+          <div class="hot-content">
+            <div class="hot-title">打工人带饭低卡便当</div>
+            <div class="hot-meta">🔥 3.1w · 便当 · 带饭 · 办公室午餐 · 新上升</div>
+          </div>
+          <div class="hot-arrow">›</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🔄 二创公式库</div>
+        <div class="card-desc">从你 448赞/374赞 爆款提炼，直接套用</div>
+
+        <div class="idea-card">
+          <div class="idea-header">
+            <div class="idea-title">公式① 叮！ + 场景 + 来啦</div>
+            <span class="card-tag tag-green">已验证 448赞</span>
+          </div>
+          <div class="idea-body">
+            原版：叮！微波炉早餐来啦<br>
+            二创：叮！空气炸锅减脂晚餐 / 叮！电饭煲懒人午餐 / 叮！平底锅3分钟减脂餐
+          </div>
+        </div>
+
+        <div class="idea-card">
+          <div class="idea-header">
+            <div class="idea-title">公式② 终于知道 + 节气 + 吃什么了</div>
+            <span class="card-tag tag-green">已验证 374赞</span>
+          </div>
+          <div class="idea-body">
+            原版：终于知道：入伏当天吃什么了！<br>
+            二创：终于知道立秋第一口吃啥 / 终于知道白露该喝什么汤 / 终于知道寒露该炖什么
+          </div>
+        </div>
+
+        <div class="idea-card">
+          <div class="idea-header">
+            <div class="idea-title">公式③ 谁懂！ + 情绪 + 太好X了</div>
+            <span class="card-tag tag-yellow">潜力</span>
+          </div>
+          <div class="idea-body">
+            原版：谁懂！三伏天化糖水也太好喝了<br>
+            二创：谁懂！这碗立秋汤也太鲜了 / 谁懂！带饭一周瘦了3斤也太爽了
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 内容复盘 -->
+    <section class="section" id="review">
+      <div class="stats-row">
+        <div class="stat-card"><div class="num">12</div><div class="label">总笔记</div></div>
+        <div class="stat-card"><div class="num">1千+</div><div class="label">获赞与收藏</div></div>
+        <div class="stat-card"><div class="num">10+</div><div class="label">粉丝</div></div>
+        <div class="stat-card"><div class="num">70%</div><div class="label">TOP2 占比</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📊 笔记数据复盘</div>
+        <div class="card-desc">找爆款规律，指导下一篇内容</div>
+
+        <div class="chart-row">
+          <div class="data-box">
+            <div class="d-title">本周爆款 TOP 1</div>
+            <div class="d-num">448</div>
+            <div class="d-sub">叮！微波炉早餐来啦</div>
+          </div>
+          <div class="data-box">
+            <div class="d-title">本周爆款 TOP 2</div>
+            <div class="d-num">374</div>
+            <div class="d-sub">终于知道：入伏当天吃什么了！</div>
+          </div>
+        </div>
+
+        <div class="post-list">
+          <div class="post-item top"><span class="p-title">叮！微波炉早餐来啦</span><span class="p-num">448 赞</span></div>
+          <div class="post-item top"><span class="p-title">终于知道：入伏当天吃什么了！</span><span class="p-num">374 赞</span></div>
+          <div class="post-item"><span class="p-title">大暑撞中伏｜大暑养生6宝必吃</span><span class="p-num">30 赞</span></div>
+          <div class="post-item"><span class="p-title">谁懂！三伏天化糖水也太好喝了</span><span class="p-num">18 赞</span></div>
+          <div class="post-item"><span class="p-title">中伏20天祛湿食谱，4种食材照着吃</span><span class="p-num">13 赞</span></div>
+          <div class="post-item"><span class="p-title">三伏天凉拌6道，开胃不伤脾</span><span class="p-num">7 赞</span></div>
+          <div class="post-item"><span class="p-title">三伏天正确吃冬瓜</span><span class="p-num">5 赞</span></div>
+        </div>
+
+        <div style="background:#f9f9fb; padding:14px; border-radius:12px; margin-top:16px; font-size:13px; color:#555; line-height:1.7;">
+          💡 <b>核心洞察：</b>TOP2 占 70% 赞量。爆款公式 = 场景痛点 + 结果前置 + 低门槛执行 + 时令流量。普通笔记标题太"科普"，缺少情绪钩子，需提升标题情绪化能力。
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🎯 账号定位</div>
+        <div class="card-desc">顺时而食的减脂厨娘</div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+          <span class="card-tag tag-green">#节气食单</span>
+          <span class="card-tag tag-yellow">#懒人减脂餐</span>
+          <span class="card-tag tag-blue">#不开火系列</span>
+        </div>
+        <div style="font-size:13px; color:#555; line-height:1.8;">
+          🎯 目标人群：18-35岁女生，想减脂但没时间<br>
+          💡 内容支柱：节气食单 / 懒人减脂 / 养生汤水<br>
+          🔄 更新频率：每周4篇（2节气 + 2懒人）<br>
+          ⚠️ 已停用："40+姐妹"标签（人群太窄，限制流量）
+        </div>
+      </div>
+    </section>
+
+    <!-- 本职工作 · 贝塔莱福 · 中老年慢病方向 -->
+    <section class="section" id="work">
+      <div class="stats-row">
+        <div class="stat-card"><div class="num">2.8亿</div><div class="label">中老年人口</div></div>
+        <div class="stat-card"><div class="num">3860亿</div><div class="label">中老年保健品市场</div></div>
+        <div class="stat-card"><div class="num">+12.7%</div><div class="label">年增长率</div></div>
+        <div class="stat-card"><div class="num">3亿+</div><div class="label">慢病患者人群</div></div>
+      </div>
+
+      <!-- 行业热点 -->
+      <div class="card">
+        <div class="card-title">
+          🔥 中老年慢病行业热点
+          <span class="card-tag tag-red">每日必看</span>
+        </div>
+        <div class="card-desc">慢病营养管理是核心趋势 · 贝塔莱福 B端销售每日关注</div>
+
+        <div class="hot-item">
+          <div class="hot-rank top">1</div>
+          <div class="hot-content">
+            <div class="hot-title">慢病营养管理成中老年保健品核心赛道</div>
+            <div class="hot-meta">📌 3860亿市场 · 慢病预防+精准营养 · 45岁以上人群刚需驱动</div>
+          </div>
+          <div class="hot-arrow">›</div>
+        </div>
+
+        <div class="hot-item">
+          <div class="hot-rank top">2</div>
+          <div class="hot-content">
+            <div class="hot-title">"精准化、功能化、场景化"成行业三大趋势</div>
+            <div class="hot-meta">📌 CIC灼识报告 · 细分慢病需求（心血管/骨关节/血糖）成发力点</div>
+          </div>
+          <div class="hot-arrow">›</div>
+        </div>
+
+        <div class="hot-item">
+          <div class="hot-rank hot">3</div>
+          <div class="hot-content">
+            <div class="hot-title">辅酶Q10+纳豆激酶成心血管"黄金搭档"</div>
+            <div class="hot-meta">📌 纳豆激酶溶栓通血管+辅酶Q10护心 · 消费者认知度快速上升</div>
+          </div>
+          <div class="hot-arrow">›</div>
+        </div>
+
+        <div class="hot-item">
+          <div class="hot-rank">4</div>
+          <div class="hot-content">
+            <div class="hot-title">社区健康服务成慢病管理新渠道</div>
+            <div class="hot-meta">📌 不再只靠药店 · 社区体验+健康检测驱动购买 · B端客户渠道下沉</div>
+          </div>
+          <div class="hot-arrow">›</div>
+        </div>
+
+        <div class="hot-item">
+          <div class="hot-rank">5</div>
+          <div class="hot-content">
+            <div class="hot-title">个性化营养方案成未来方向</div>
+            <div class="hot-meta">📌 基因检测+大数据 · 针对个体慢病状况定制配方 · 高端市场溢价高</div>
+          </div>
+          <div class="hot-arrow">›</div>
+        </div>
+      </div>
+
+      <!-- 慢病原料矩阵 -->
+      <div class="card">
+        <div class="card-title">
+          🧪 中老年慢病核心原料
+          <span class="card-tag tag-blue">销售必备</span>
+        </div>
+        <div class="card-desc">按慢病方向分类 · 每类附销售话术和贝塔莱福优势</div>
+
+        <div class="section-label" style="font-size:14px; font-weight:700; color:#1d1d1f; margin:16px 0 10px;">❤️ 心血管方向（三高/血管/心脏）</div>
+
+        <div class="idea-card hot">
+          <div class="idea-header">
+            <div class="idea-title">① 纳豆激酶 · 血管清道夫</div>
+            <span class="card-tag tag-red">心血管第一原料</span>
+          </div>
+          <div class="idea-body">
+            安全高效溶解血栓、抗动脉粥样硬化，改善血管狭窄和堵塞。日本研究最成熟，消费者认知度高。<br>
+            <b>销售话术：</b>"先通血管再护心"——纳豆激酶负责溶栓通血管，搭配辅酶Q10护心，是日本最经典的心血管配方。<br>
+            <b>贝塔莱福优势：</b>日本原装进口，纳豆激酶源头品质有保障，活性单位可溯源。
+          </div>
+          <div class="idea-actions">
+            <button class="idea-btn green" onclick="openSearchB2B('纳豆激酶 原料供应商 2025')">🔍 看竞品</button>
+            <button class="idea-btn" onclick="openSearchB2B('纳豆激酶 市场 趋势')">📊 看市场</button>
+          </div>
+        </div>
+
+        <div class="idea-card hot">
+          <div class="idea-header">
+            <div class="idea-title">② 辅酶Q10 · 心脏发动机</div>
+            <span class="card-tag tag-red">中老年认知度Top3</span>
+          </div>
+          <div class="idea-body">
+            参与细胞能量合成，保护心肌，中老年保健品"常客"。蓝帽子备案产品多，市场教育成熟。<br>
+            <b>销售话术：</b>辅酶Q10是中老年心血管的标配原料，建议搭配纳豆激酶做复配产品，"通血管+护心脏"双效。<br>
+            <b>贝塔莱福优势：</b>日本原装进口，氧化型/还原型均可供应，纯度有保障。
+          </div>
+          <div class="idea-actions">
+            <button class="idea-btn green" onclick="openSearchB2B('辅酶Q10 原料供应商 日本')">🔍 看竞品</button>
+            <button class="idea-btn" onclick="openSearchB2B('辅酶Q10 市场规模 2025')">📊 看市场</button>
+          </div>
+        </div>
+
+        <div class="idea-card trend">
+          <div class="idea-header">
+            <div class="idea-title">③ 红曲米 · 天然降脂</div>
+            <span class="card-tag tag-yellow">高增长</span>
+          </div>
+          <div class="idea-body">
+            含天然洛伐他汀，辅助降血脂，中式养生认知度高，中老年人接受度好。<br>
+            <b>销售话术：</b>红曲米是"天然他汀"，适合不想长期吃药的高血脂人群，做辅助降脂产品线核心原料。
+          </div>
+          <div class="idea-actions">
+            <button class="idea-btn green" onclick="openSearchB2B('红曲米 原料 降血脂')">🔍 看竞品</button>
+          </div>
+        </div>
+
+        <div class="idea-card trend">
+          <div class="idea-header">
+            <div class="idea-title">④ 深海鱼油（EPA/DHA）· 降三高全能</div>
+            <span class="card-tag tag-yellow">大体量</span>
+          </div>
+          <div class="idea-body">
+            调节血脂、保护血管、抗炎，中老年认知度极高，市场体量巨大。<br>
+            <b>销售话术：</b>鱼油是中老年保健品的"流量入口"，用鱼油获客，再交叉卖纳豆激酶、辅酶Q10做利润款。
+          </div>
+          <div class="idea-actions">
+            <button class="idea-btn green" onclick="openSearchB2B('深海鱼油 EPA DHA 原料')">🔍 看竞品</button>
+          </div>
+        </div>
+
+        <div class="section-label" style="font-size:14px; font-weight:700; color:#1d1d1f; margin:16px 0 10px;">🦴 骨关节方向（骨质疏松/关节炎）</div>
+
+        <div class="idea-card hot">
+          <div class="idea-header">
+            <div class="idea-title">⑤ 氨糖+软骨素 · 关节黄金搭档</div>
+            <span class="card-tag tag-red">骨关节第一原料</span>
+          </div>
+          <div class="idea-body">
+            氨糖修复软骨、软骨素润滑关节，中老年骨关节保健品的绝对主力。45岁以上人群刚需。<br>
+            <b>销售话术：</b>氨糖+软骨素是骨关节"修+润"组合，建议加钙+VD3做"关节+骨骼"全方案，客单价翻倍。
+          </div>
+          <div class="idea-actions">
+            <button class="idea-btn green" onclick="openSearchB2B('氨糖软骨素 原料供应商')">🔍 看竞品</button>
+            <button class="idea-btn" onclick="openSearchB2B('氨糖 市场趋势 2025')">📊 看市场</button>
+          </div>
+        </div>
+
+        <div class="idea-card">
+          <div class="idea-header">
+            <div class="idea-title">⑥ 维生素K2 · 骨钙定向搬运工</div>
+            <span class="card-tag tag-purple">新兴</span>
+          </div>
+          <div class="idea-body">
+            把血液中的钙"搬"到骨骼，防止血管钙化。和钙+VD3搭配是骨骼健康最优组合。<br>
+            <b>销售话术：</b>只补钙不够，K2能把钙送到骨头里，否则反而堵血管。MK-7型K2活性最高，日本技术领先。
+          </div>
+          <div class="idea-actions">
+            <button class="idea-btn green" onclick="openSearchB2B('维生素K2 MK-7 原料')">🔍 看竞品</button>
+          </div>
+        </div>
+
+        <div class="section-label" style="font-size:14px; font-weight:700; color:#1d1d1f; margin:16px 0 10px;">🧠 认知/血糖/综合方向</div>
+
+        <div class="idea-card trend">
+          <div class="idea-header">
+            <div class="idea-title">⑦ 银杏叶提取物 · 改善微循环</div>
+            <span class="card-tag tag-yellow">认知功能</span>
+          </div>
+          <div class="idea-body">
+            改善脑部微循环，辅助记忆力，中老年认知功能衰退市场的核心原料。<br>
+            <b>销售话术：</b>银杏叶+鱼油是"脑健康"组合，一个通血管一个营养神经，适合做银发认知类产品。
+          </div>
+          <div class="idea-actions">
+            <button class="idea-btn green" onclick="openSearchB2B('银杏叶提取物 原料 认知')">🔍 看竞品</button>
+          </div>
+        </div>
+
+        <div class="idea-card trend">
+          <div class="idea-header">
+            <div class="idea-title">⑧ 大豆卵磷脂 · 肝脑双护</div>
+            <span class="card-tag tag-yellow">经典款</span>
+          </div>
+          <div class="idea-body">
+            保护肝脏、改善记忆、乳化血脂。中老年认知度高，和鱼油是经典搭配。<br>
+            <b>销售话术：</b>鱼油+卵磷脂是中老年"血管+大脑"经典组合，认知度极高，适合做引流款。
+          </div>
+          <div class="idea-actions">
+            <button class="idea-btn green" onclick="openSearchB2B('大豆卵磷脂 原料 供应商')">🔍 看竞品</button>
+          </div>
+        </div>
+
+        <div class="idea-card">
+          <div class="idea-header">
+            <div class="idea-title">⑨ 苦荞/桑叶提取物 · 血糖管理</div>
+            <span class="card-tag tag-purple">糖尿病赛道</span>
+          </div>
+          <div class="idea-body">
+            辅助降血糖，3亿糖尿病/糖尿病前期人群的刚需。功能食品化是趋势。<br>
+            <b>销售话术：</b>中国3亿血糖异常人群，桑叶/苦荞提取物做辅助降糖产品，市场空间巨大。
+          </div>
+          <div class="idea-actions">
+            <button class="idea-btn green" onclick="openSearchB2B('桑叶提取物 降糖 原料')">🔍 看竞品</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 中老年消费趋势 -->
+      <div class="card">
+        <div class="card-title">
+          👥 中老年消费趋势洞察
+          <span class="card-tag tag-green">帮你看懂终端需求</span>
+        </div>
+        <div class="card-desc">中老年慢病市场的消费者在想什么 · B端启示</div>
+
+        <div class="idea-card">
+          <div class="idea-header">
+            <div class="idea-title">趋势① 慢病预防 > 治病</div>
+          </div>
+          <div class="idea-body">
+            45岁以上人群从"生病才吃药"转向"提前预防"。三高、骨关节、认知衰退是三大预防刚需。<br>
+            <b>B端启示：</b>跟客户聊时，别只说"降血脂"，要说"45岁以后血管开始老化，提前用纳豆激酶做预防"。把原料讲成"预防方案"。
+          </div>
+        </div>
+
+        <div class="idea-card">
+          <div class="idea-header">
+            <div class="idea-title">趋势② 子女代买成重要决策链</div>
+          </div>
+          <div class="idea-body">
+            很多中老年保健品是子女买给父母的。子女看成分和品牌，父母看价格和信任。<br>
+            <b>B端启示：</b>帮客户做产品时，建议包装上同时打动两代人——成分说明专业（给子女看），大字+简单功效（给老人看）。
+          </div>
+        </div>
+
+        <div class="idea-card">
+          <div class="idea-header">
+            <div class="idea-title">趋势③ 社区体验+健康检测驱动购买</div>
+          </div>
+          <div class="idea-body">
+            不再只靠药店货架，社区健康讲座、免费测血压/血糖后推荐产品，转化率极高。<br>
+            <b>B端启示：</b>你的客户如果有社区渠道，帮他们设计"检测+原料方案"组合包。比如"测出血脂偏高→推荐红曲米+鱼油套装"。
+          </div>
+        </div>
+
+        <div class="idea-card">
+          <div class="idea-header">
+            <div class="idea-title">趋势④ 复方组合 > 单一成分</div>
+          </div>
+          <div class="idea-body">
+            中老年人不想吃一堆瓶瓶罐罐，"一瓶搞定多种慢病"的复方产品更受欢迎。<br>
+            <b>B端启示：</b>推荐原料时主动给组合方案：心血管三件套（纳豆激酶+辅酶Q10+鱼油）、骨关节三件套（氨糖+软骨素+K2）。
+          </div>
+        </div>
+      </div>
+
+      <!-- 客户开发方向 -->
+      <div class="card">
+        <div class="card-title">
+          🎯 慢病方向客户开发
+          <span class="card-tag tag-yellow">B端实战</span>
+        </div>
+        <div class="card-desc">聚焦中老年慢病赛道，精准找客户</div>
+
+        <div class="task-card" style="cursor:default;">
+          <div style="font-size:22px;">🏭</div>
+          <div class="task-content">
+            <div class="task-title">中老年保健品品牌方</div>
+            <div class="task-desc">汤臣倍健、百合股份、健康元等品牌的中老年产品线<br><b>切入角度：</b>用日本原装进口纳豆激酶/辅酶Q10打差异化，强调日本供应链溯源</div>
+          </div>
+        </div>
+
+        <div class="task-card" style="cursor:default;">
+          <div style="font-size:22px;">🏥</div>
+          <div class="task-content">
+            <div class="task-title">社区健康服务机构</div>
+            <div class="task-desc">做社区健康检测、慢病管理的机构，需要配套产品<br><b>切入角度：</b>提供"检测+原料方案"组合，帮他们做一站式慢病营养管理</div>
+          </div>
+        </div>
+
+        <div class="task-card" style="cursor:default;">
+          <div style="font-size:22px;">💊</div>
+          <div class="task-content">
+            <div class="task-title">OEM/ODM 代工厂（中老年线）</div>
+            <div class="task-desc">专做中老年保健品的代工厂，需要稳定原料+配方建议<br><b>切入角度：</b>不只卖原料，提供成熟复方方案（心血管/骨关节/认知），帮客户省研发时间</div>
+          </div>
+        </div>
+
+        <div class="task-card" style="cursor:default;">
+          <div style="font-size:22px;">📺</div>
+          <div class="task-content">
+            <div class="task-title">电视购物/会销渠道品牌</div>
+            <div class="task-desc">电视购物和会销是中老年保健品重要渠道，需要"有故事"的原料<br><b>切入角度：</b>日本原装进口本身就是卖点，纳豆激酶"日本长寿秘诀"的故事在会销中极有说服力</div>
+          </div>
+        </div>
+
+        <div class="task-card" style="cursor:default;">
+          <div style="font-size:22px;">🏪</div>
+          <div class="task-content">
+            <div class="task-title">连锁药店/大连锁</div>
+            <div class="task-desc">药店中老年保健品占比高，需要高毛利+高复购的原料<br><b>切入角度：</b>氨糖+辅酶Q10是药店高频复购品，用日本进口品质做高毛利定制款</div>
+          </div>
+        </div>
+
+        <div style="background:#e8f5e9; padding:14px; border-radius:12px; margin-top:16px; font-size:13px; color:#2e7d32; line-height:1.7;">
+          💡 <b>你的独特优势：</b>你既做B端慢病原料销售，又在做小红书博主。可以用C端视角帮B端客户分析——"哪些慢病原料在小红书上被中老年子女搜索最多"，这是普通销售给不了的增值服务。比如"辅酶Q10"在小红书月搜XX万次，你拿这个数据跟客户聊，立刻不一样。
+        </div>
+
+        <div style="background:#fff8e1; padding:14px; border-radius:12px; margin-top:12px; font-size:13px; color:#f57f17; line-height:1.7;">
+          ⭐ <b>贝塔莱福核心卖点回顾：</b>日本原装进口功能性原料 · 总部东京 · 天津滨海新区 · 胶原蛋白/弹性蛋白/纳豆激酶/辅酶Q10等 · 日本OEM代工一站式服务
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 备忘录 -->
+    <section class="section" id="memo">
+      <div class="card">
+        <div class="card-title">📝 创作备忘录</div>
+        <div class="card-desc">随手记录：食材搭配、标题金句、用户提问、避坑经验</div>
+        <textarea class="memo-input" id="memoInput" placeholder="想到什么就记什么..."></textarea>
+        <button class="btn-small primary" onclick="saveMemo()" style="padding:8px 18px;">保存备忘</button>
+
+        <div id="memoList" style="margin-top:16px;">
+          <div class="memo-card">
+            <div class="memo-text">✅ 标题模板：「N样食材 + 节气 + 结果」，例：立秋润肺3样，整个秋天不干咳</div>
+            <div class="memo-time">昨日</div>
+          </div>
+          <div class="memo-card">
+            <div class="memo-text">⚠️ 避坑：标题别太"百科"，"三伏天正确吃冬瓜"只有5赞，太冷了</div>
+            <div class="memo-time">3天前</div>
+          </div>
+          <div class="memo-card">
+            <div class="memo-text">🥬 秋季食材库：银耳、百合、梨、莲藕、山药、蜂蜜、白萝卜</div>
+            <div class="memo-time">5天前</div>
+          </div>
+          <div class="memo-card">
+            <div class="memo-text">💬 互动话术："你伏天最想吃什么？评论区告诉我，下期出教程"</div>
+            <div class="memo-time">1周前</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<button class="add-float" onclick="handleAdd()">+</button>
+
+<script>
+  const today = new Date();
+  const weekDays = ['周日','周一','周二','周三','周四','周五','周六'];
+  document.getElementById('dateBadge').textContent = `${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日 ${weekDays[today.getDay()]}`;
+
+  const STORE_KEY = 'nuanhe_workbench_v3';
+  function loadStore() { try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch(e) { return {}; } }
+  function saveStore(data) { try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch(e) {} }
+  let store = loadStore();
+  const todayKey = today.toISOString().slice(0,10);
+  if (store.taskDate !== todayKey) { store.taskDate = todayKey; store.tasks = {}; saveStore(store); }
+
+  const titles = {
+    plan: '每日计划',
+    ideas: '选题每日灵感',
+    hot: '爆款热点/二创',
+    review: '内容复盘',
+    work: '本职工作 · 贝塔莱福',
+    memo: '备忘录'
+  };
+
+  function switchTab(name) {
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelector(`.nav-item[data-section="${name}"]`).classList.add('active');
+    document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+    document.getElementById(name).classList.add('active');
+    document.getElementById('pageTitle').textContent = titles[name];
+    closeSidebar();
+  }
+
+  function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('show'); }
+  function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
+
+  function toggleTask(idx) {
+    store.tasks = store.tasks || {};
+    store.tasks[idx] = !store.tasks[idx];
+    saveStore(store);
+    renderTasks();
+  }
+
+  function renderTasks() {
+    const cards = document.querySelectorAll('#plan .task-card');
+    let done = 0;
+    cards.forEach((card, i) => {
+      const cb = card.querySelector('.task-checkbox');
+      const completed = !!store.tasks[i];
+      if (completed) {
+        cb.classList.add('checked'); cb.innerHTML = '✓';
+        card.classList.add('done'); done++;
+      } else {
+        cb.classList.remove('checked'); cb.innerHTML = '';
+        card.classList.remove('done');
+      }
+    });
+    const total = cards.length;
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statDone').textContent = done;
+    document.getElementById('statLeft').textContent = total - done;
+    document.getElementById('statRate').textContent = Math.round(done/total*100) + '%';
+    document.getElementById('progressText').textContent = `${done} / ${total}`;
+    document.getElementById('progressFill').style.width = (done/total*100) + '%';
+  }
+
+  function escapeHtml(s) { return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function saveMemo() {
+    const input = document.getElementById('memoInput');
+    const text = input.value.trim();
+    if (!text) { alert('备忘不能为空'); return; }
+    const div = document.createElement('div');
+    div.className = 'memo-card';
+    div.innerHTML = `<div class="memo-text">${escapeHtml(text)}</div><div class="memo-time">刚刚</div>`;
+    document.getElementById('memoList').prepend(div);
+    input.value = '';
+    store.memos = store.memos || [];
+    store.memos.unshift({text, time: '刚刚'});
+    saveStore(store);
+  }
+
+  function openSearch(keyword) {
+    window.open('https://www.xiaohongshu.com/search_result?keyword=' + encodeURIComponent(keyword), '_blank');
+  }
+
+  function openSearchB2B(keyword) {
+    window.open('https://www.baidu.com/s?wd=' + encodeURIComponent(keyword + ' 2025'), '_blank');
+  }
+
+  function doSearch() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('.task-card, .idea-card, .hot-item, .memo-card, .post-item').forEach(el => {
+      if (q === '') { el.style.display = ''; return; }
+      el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  }
+
+  function handleAdd() {
+    const active = document.querySelector('.section.active').id;
+    if (active === 'memo') {
+      saveMemo();
+    } else if (active === 'plan') {
+      const title = prompt('新任务名称：');
+      if (!title) return;
+      const desc = prompt('任务说明：', '') || '';
+      // 添加任务逻辑（可扩展）
+      alert('✅ 已记录：' + title + '\n' + desc);
+    } else if (active === 'ideas') {
+      const idea = prompt('新选题灵感：');
+      if (!idea) return;
+      alert('✅ 已记录灵感：' + idea);
+    } else {
+      alert('当前页面：' + titles[active] + '\n\n长按此按钮可快速添加内容');
+    }
+  }
+
+  // 恢复备忘
+  if (store.memos) {
+    store.memos.forEach(m => {
+      const div = document.createElement('div');
+      div.className = 'memo-card';
+      div.innerHTML = `<div class="memo-text">${escapeHtml(m.text)}</div><div class="memo-time">${escapeHtml(m.time)}</div>`;
+      document.getElementById('memoList').prepend(div);
+    });
+  }
+
+  renderTasks();
+</script>
+
+</body>
+</html>
